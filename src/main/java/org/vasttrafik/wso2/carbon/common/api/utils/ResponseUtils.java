@@ -1,5 +1,9 @@
 package org.vasttrafik.wso2.carbon.common.api.utils;
 
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.core.Response;
 import org.vasttrafik.wso2.carbon.common.api.beans.Error;
@@ -53,10 +57,28 @@ public class ResponseUtils {
 	}
 
 	public static Response notFound(String resource) {
+		System.out.println("not found");
 		String message = "Den efterfr�gade resursen saknas.";
 		String description = "Resursen " + resource + " saknas p� servern";
 		Response response = buildError(404, 404L, message, description, "");
 		return response;
+	}
+
+	public static Response serverError(Exception e) {
+		Error error = new Error();
+		error.setMessage(e.getMessage());
+
+		Throwable t = e.getCause();
+
+		if (t != null) {
+			OutputStream os = new ByteArrayOutputStream();
+			PrintWriter writer = new PrintWriter(os);
+			t.printStackTrace(writer);
+			error.setDescription("Cause:" + t.getMessage());
+			error.setMoreInfo(writer.toString());
+		}
+
+		return Response.status(500).entity(error).build();
 	}
 
 	public static Response buildError(int status, Long code, String message, String description, String moreInfo) {
