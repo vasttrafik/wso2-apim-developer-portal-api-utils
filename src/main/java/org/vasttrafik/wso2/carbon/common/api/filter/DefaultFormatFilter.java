@@ -20,12 +20,15 @@ public class DefaultFormatFilter implements ContainerResponseFilter {
 		setResponseHeaders(responseContext);
 	}
 
-	// TO-DO: Set Content-Length?
-	//        Set ETag?
-	//        Set Last-Modified?
 	private void setResponseHeaders(ContainerResponseContext responseContext) {
+		Object contentType = responseContext.getHeaders().getFirst("Content-Type");
+		
+		// If JSON content, make sure the character encoding is UTF-8
+		if (contentType != null && MediaType.APPLICATION_JSON.equalsIgnoreCase(contentType.toString()))
+			responseContext.getHeaders().putSingle("Content-Type", contentType + "; charset=utf-8");
+		
 		// Set CORS Headers
-		responseContext.getHeaders().add("Access-Control-Allow-Origin", "*");
+		responseContext.getHeaders().add("Access-Control-Allow-Origin",  "*");
 		responseContext.getHeaders().add("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
 		responseContext.getHeaders().add("Access-Control-Allow-Headers", "Accept,Authorization,Access-Control-Allow-Origin,Content-Length,Content-Type,If-None-Match,If-Modified-Since");
 	}
