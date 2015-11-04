@@ -3,25 +3,28 @@ package org.vasttrafik.wso2.carbon.common.api.utils;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+import org.vasttrafik.wso2.carbon.common.api.beans.Error;
 
 import javax.ws.rs.BadRequestException;
+import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.Response;
-import org.vasttrafik.wso2.carbon.common.api.beans.Error;
 
 /**
  * @author Lars Andersson
  *
  */
 public class ResponseUtils {
-
-	public static void checkParameter(String parameterName, boolean required, String[] validValues, String value) throws BadRequestException {
+	
+	public static void checkParameter(String resourceBundle, String parameterName, boolean required, String[] validValues, String value) throws BadRequestException {
 		try {
 			/**
 			 * Check for missing required parameter value
 			 */
-			if (required && value == null) {
+			if (required && value == null)
 				throw new Exception();
-			}
 
 			/**
 			 * Check for valid parameter value
@@ -29,47 +32,77 @@ public class ResponseUtils {
 			if (value != null) {
 				if (validValues != null && validValues.length > 0) {
 					for (int i = 0; i < validValues.length; i++) {
-						if (validValues[i].equalsIgnoreCase(value)) {
+						if (validValues[i].equalsIgnoreCase(value))
 							return;
-						}
 					}
 					throw new Exception();
 				}
 			}
-		} catch (Exception e) {
-			Response response = invalidRequestParameter(parameterName);
-			throw new BadRequestException(response);
+		}
+		catch (Exception e) {
+			badRequest(resourceBundle, 1000L, new Object[][]{{value},{parameterName}});
 		}
 	}
-
-	public static Response invalidRequestParameter(String parameterName) {
-		String message = "Ogiltigt v�rde f�r parameter.";
-		String description = "Parametern " + parameterName + " saknas eller �r ogiltigt.";
-		return buildError(400, 400L, message, description, "");
+	
+	public static void preconditionFailed(String resourceBundle, Long code, Object[][] args) throws ClientErrorException {
+		Error error = buildError(resourceBundle, code, args);
+		Response response = Response.status(Response.Status.PRECONDITION_FAILED).entity(error).build();
+		
+		throw new ClientErrorException(response);
 	}
+	
+	public static void badRequest(String resourceBundle, Long code, Object[][] args) throws BadRequestException {
+		Error error = buildError(resourceBundle, code, args);
+		Response response = Response.status(Response.Status.BAD_REQUEST).entity(error).build();
 
-	public static Response badRequest(String message, String description, String moreInfo) {
-		return buildError(400, 400L, message, description, moreInfo);
+		throw new BadRequestException(response);
 	}
-
-	public static Response unauthorized(String message, String description, String moreInfo) {
-		return buildError(401, 401L, message, description, moreInfo);
+	
+	public static String getErrorMessage(String resourceBundle, String error, Object[] args) {
+		AbstractErrorListResourceBundle bundle = (AbstractErrorListResourceBundle)
+				ResourceBundle.getBundle(resourceBundle, Locale.getDefault(), ResponseUtils.class.getClassLoader());
+		
+		if (bundle != null) {
+			try {
+				return bundle.getMessage(error, args);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return error;
 	}
-
-	public static Response notFound(String resource) {
-		System.out.println("not found");
-		String message = "Den efterfr�gade resursen saknas.";
-		String description = "Resursen " + resource + " saknas p� servern";
-		Response response = buildError(404, 404L, message, description, "");
-		return response;
+	
+	public static Error buildError(String resourceBundle, Long code, Object[][] args) {
+		AbstractErrorListResourceBundle bundle = (AbstractErrorListResourceBundle)
+				ResourceBundle.getBundle(resourceBundle, Locale.getDefault(), ResponseUtils.class.getClassLoader());
+		
+		if (bundle != null) {
+			try {
+				return bundle.getError(code, args);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return new Error();
 	}
-
+	
+	public static Response buildError(int status, Long code, String message, String description, String moreInfo) {
+		Error error = new Error();
+		error.setCode(code);
+		error.setMessage(message);
+		error.setDescription(description);
+		error.setMoreInfo(moreInfo);
+		return Response.status(status).entity(error).build();
+	}
+	
 	public static Response serverError(Exception e) {
 		Error error = new Error();
 		error.setMessage(e.getMessage());
-
+		
 		Throwable t = e.getCause();
-
+		
 		if (t != null) {
 			OutputStream os = new ByteArrayOutputStream();
 			PrintWriter writer = new PrintWriter(os);
@@ -79,14 +112,5 @@ public class ResponseUtils {
 		}
 
 		return Response.status(500).entity(error).build();
-	}
-
-	public static Response buildError(int status, Long code, String message, String description, String moreInfo) {
-		Error error = new Error();
-		error.setCode(code);
-		error.setMessage(message);
-		error.setDescription(description);
-		error.setMoreInfo(moreInfo);
-		return Response.status(status).entity(error).build();
 	}
 }

@@ -24,7 +24,7 @@ public class DefaultFormatFilter implements ContainerResponseFilter {
 		Object contentType = responseContext.getHeaders().getFirst("Content-Type");
 		
 		// If JSON content, make sure the character encoding is UTF-8
-		if (contentType != null && MediaType.APPLICATION_JSON.equalsIgnoreCase(contentType.toString()))
+		if (contentType != null && "application/json".equalsIgnoreCase(contentType.toString()))
 			responseContext.getHeaders().putSingle("Content-Type", contentType + "; charset=utf-8");
 		
 		// Set CORS Headers
