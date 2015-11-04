@@ -17,6 +17,8 @@ import javax.ws.rs.core.Response;
  *
  */
 public class ResponseUtils {
+
+    private static Locale SWEDISH = new Locale("sv", "SE");
 	
 	public static void checkParameter(String resourceBundle, String parameterName, boolean required, String[] validValues, String value) throws BadRequestException {
 		try {
@@ -60,7 +62,7 @@ public class ResponseUtils {
 	
 	public static String getErrorMessage(String resourceBundle, String error, Object[] args) {
 		AbstractErrorListResourceBundle bundle = (AbstractErrorListResourceBundle)
-				ResourceBundle.getBundle(resourceBundle, Locale.getDefault(), ResponseUtils.class.getClassLoader());
+				ResourceBundle.getBundle(resourceBundle, SWEDISH, ResponseUtils.class.getClassLoader());
 		
 		if (bundle != null) {
 			try {
@@ -75,7 +77,7 @@ public class ResponseUtils {
 	
 	public static Error buildError(String resourceBundle, Long code, Object[][] args) {
 		AbstractErrorListResourceBundle bundle = (AbstractErrorListResourceBundle)
-				ResourceBundle.getBundle(resourceBundle, Locale.getDefault(), ResponseUtils.class.getClassLoader());
+				ResourceBundle.getBundle(resourceBundle, SWEDISH, ResponseUtils.class.getClassLoader());
 		
 		if (bundle != null) {
 			try {
