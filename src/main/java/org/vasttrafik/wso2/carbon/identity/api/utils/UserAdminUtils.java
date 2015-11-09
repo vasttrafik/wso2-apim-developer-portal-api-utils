@@ -17,33 +17,10 @@ public class UserAdminUtils {
 	private static final RemoteUserStoreManagerServiceStub userStoreStub = ClientUtils.getRemoteUserStoreManagerServiceStub();
 
 	public static String validateToken(Integer userId, String authHeader) throws Exception {
-		String userName = null;
-		String token = extractTokenFromAuthHeader(authHeader);
-
-		if (token == null) {
-			throw new Exception("Authorization header missing or invalid");
-		}
-
 		try {
-			ClientUtils.authenticateIfNeeded(oauthStub._getServiceClient());
-
-			OAuth2TokenValidationRequestDTO requestDTO = new OAuth2TokenValidationRequestDTO();
-			OAuth2TokenValidationRequestDTO_OAuth2AccessToken accessToken = new OAuth2TokenValidationRequestDTO_OAuth2AccessToken();
-			accessToken.setIdentifier(token);
-			accessToken.setTokenType("bearer");
-			requestDTO.setAccessToken(accessToken);
-			OAuth2TokenValidationRequestDTO_TokenValidationContextParam[] context = new OAuth2TokenValidationRequestDTO_TokenValidationContextParam[0];
-			requestDTO.setContext(context);
-			OAuth2TokenValidationResponseDTO responseDTO = oauthStub.validate(requestDTO);
-
-			if (!responseDTO.getValid()) {
-				throw new Exception(responseDTO.getErrorMsg());
-			} else {
-				userName = responseDTO.getAuthorizedUser();
-			}
+			String userName = validateToken(authHeader);
 
 			ClientUtils.authenticateIfNeeded(userStoreStub._getServiceClient());
-
 			Integer realUserId = userStoreStub.getUserId(userName);
 
 			if (!realUserId.equals(userId)) {
@@ -57,51 +34,40 @@ public class UserAdminUtils {
 		}
 	}
 
-	private static String extractTokenFromAuthHeader(String authHeader) {
-		final String oauthHeaderSplitter = ",";
-		final String consumerKeySegmentDelimiter = " ";
-		final String consumerKeyHeaderSegment = " ";
+	public static String validateToken(String authHeader) throws Exception {
 
-		if (authHeader == null) {
-			return null;
+		final String[] values = authHeader.split(" ");
+		if (values.length != 2 || !"bearer".equalsIgnoreCase(values[0])) {
+			throw new Exception("Authorization header missing or invalid");
 		}
+		final String token = values[1];
 
-		if (authHeader.startsWith("OAuth ") || authHeader.startsWith("oauth ")) {
-			authHeader = authHeader.substring(authHeader.indexOf("o"));
-		}
+		try {
+			ClientUtils.authenticateIfNeeded(oauthStub._getServiceClient());
 
-		String[] headers = authHeader.split(oauthHeaderSplitter);
+			OAuth2TokenValidationRequestDTO requestDTO = new OAuth2TokenValidationRequestDTO();
+			OAuth2TokenValidationRequestDTO_OAuth2AccessToken accessToken = new OAuth2TokenValidationRequestDTO_OAuth2AccessToken();
+			accessToken.setIdentifier(token);
+			accessToken.setTokenType("bearer");
+			requestDTO.setAccessToken(accessToken);
+			OAuth2TokenValidationRequestDTO_TokenValidationContextParam[] context = new OAuth2TokenValidationRequestDTO_TokenValidationContextParam[0];
+			OAuth2TokenValidationRequestDTO_TokenValidationContextParam item = new OAuth2TokenValidationRequestDTO_TokenValidationContextParam();
+			context[0] = item;
+			requestDTO.setContext(context);
+			OAuth2TokenValidationResponseDTO responseDTO = oauthStub.validate(requestDTO);
 
-		if (headers != null) {
-			for (String header : headers) {
-				String[] elements = header.split(consumerKeySegmentDelimiter);
-				if (elements != null && elements.length > 1) {
-					int j = 0;
-					boolean isConsumerKeyHeaderAvailable = false;
-
-					for (String element : elements) {
-						if (!"".equals(element.trim())) {
-							if (consumerKeyHeaderSegment.equals(elements[j].trim())) {
-								isConsumerKeyHeaderAvailable = true;
-							} else if (isConsumerKeyHeaderAvailable) {
-								return removeLeadingAndTrailing(elements[j].trim());
-							}
-						}
-						j++;
-					}
-				}
+			String userName = null;
+			if (!responseDTO.getValid()) {
+				throw new Exception(responseDTO.getErrorMsg());
+			} else {
+				userName = responseDTO.getAuthorizedUser();
 			}
-		}
-		return null;
-	}
 
-	private static String removeLeadingAndTrailing(String base) {
-		String result = base;
-
-		if (base.startsWith("\"") || base.endsWith("\"")) {
-			result = base.replace("\"", "");
+			return userName;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
 		}
-		return result.trim();
 	}
 
 }
