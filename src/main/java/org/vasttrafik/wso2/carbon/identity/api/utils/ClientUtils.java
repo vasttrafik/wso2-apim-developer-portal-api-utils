@@ -1,18 +1,23 @@
 package org.vasttrafik.wso2.carbon.identity.api.utils;
 
 import java.util.Hashtable;
+
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.axis2.transport.http.HttpTransportProperties;
+
 import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
+import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.claim.mgt.stub.ClaimManagementServiceStub;
 import org.wso2.carbon.identity.mgt.stub.UserInformationRecoveryServiceStub;
 import org.wso2.carbon.identity.oauth2.stub.OAuth2TokenValidationServiceStub;
 import org.wso2.carbon.registry.ws.stub.WSRegistryServiceStub;
 import org.wso2.carbon.um.ws.api.stub.RemoteUserStoreManagerServiceStub;
+import org.wso2.carbon.user.core.config.RealmConfigXMLProcessor;
+import org.wso2.carbon.user.api.RealmConfiguration;
 
 /**
  * @author Lars Andersson
@@ -27,23 +32,32 @@ public final class ClientUtils {
 	/**
 	 * User Name to access WSO2 Carbon Server
 	 */
-	private static final String USER_NAME = "admin";
+	private static final String ADMIN_USER_NAME = "admin";
 
-	// TO-DO: Replace default password with system property
 	/**
 	 * Password of the User who access the WSO2 Carbon Server
 	 */
-	private static final String PASSWORD = "admin";
+	private static String ADMIN_PASSWORD = "";
+	
+	/**
+	 * Password of the trust store
+	 */
+	private static String TRUST_STORE_PASSWORD = "";
 
 	/**
 	 * The API Manager Host
 	 */
 	private static final String HOST_NAME = "localhost";
+	
+	/**
+	 * The API Manager Port
+	 */
+	private static short HOST_PORT = 9443;
 
 	/**
 	 * Web services URL
 	 */
-	private static final String SERVICES_URL = "https://" + HOST_NAME + ":9443/services/";
+	private static String SERVICES_URL = "";
 
 	/**
 	 * Session cookie
@@ -250,7 +264,7 @@ public final class ClientUtils {
 			/**
 			 * Authenticate User
 			 */
-			boolean authenticate = authenticationStub.login(USER_NAME, PASSWORD, HOST_NAME);
+			boolean authenticate = authenticationStub.login(ADMIN_USER_NAME, ADMIN_PASSWORD, HOST_NAME);
 
 			if (authenticate) {
 				/**
@@ -269,10 +283,12 @@ public final class ClientUtils {
 				 * Remember the time when we authenticated
 				 */
 				serviceClients.put(serviceClient, System.currentTimeMillis());
-			} else {
-				throw new Exception("User " + USER_NAME + " failed to authenticate");
+			} 
+			else {
+				throw new Exception("User " + ADMIN_USER_NAME + " failed to authenticate");
 			}
-		} catch (Exception e) {
+		} 
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -287,8 +303,8 @@ public final class ClientUtils {
 		 * Setting basic auth headers for authentication for carbon server
 		 */
 		HttpTransportProperties.Authenticator auth = new HttpTransportProperties.Authenticator();
-		auth.setUsername(USER_NAME);
-		auth.setPassword(PASSWORD);
+		auth.setUsername(ADMIN_USER_NAME);
+		auth.setPassword(ADMIN_PASSWORD);
 		auth.setPreemptiveAuthentication(true);
 
 		/**
@@ -312,20 +328,38 @@ public final class ClientUtils {
 			option.setProperty(HTTPConstants.COOKIE_STRING, authCookie);
 		}
 	}
-
-	static {
-		/**
-		 * Call to https://<host>:9443/services/ uses HTTPS protocol. Therefore we need to validate the server certificate or CA chain. The server certificate
-		 * is looked up in the trust store.
-		 */
-		String CARBON_HOME = System.getProperty("carbon.home");
-		String TRUST_STORE = CARBON_HOME + "/repository/resources/security/client-truststore.jks";
-
-		System.setProperty("javax.net.ssl.trustStore", TRUST_STORE);
-		// TO-DO: Replace default password with system property
-		System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
-
+	
+	private static void initialize() {
 		try {
+			/**
+			 * Get the server configuration (carbon.xml) and the trust store password
+			 */
+			ServerConfiguration config = ServerConfiguration.getInstance();
+            TRUST_STORE_PASSWORD = config.getFirstProperty("Security.TrustStore.Password");
+			
+			/**
+			 * Get the server port offset
+			 */
+			String offset = config.getFirstProperty("Ports.Offset");
+			HOST_PORT += Short.valueOf(offset);
+			SERVICES_URL = "https://" + HOST_NAME + ":" + HOST_PORT + "/services/";
+			
+			/**
+			 * Get the user store configuration (user-mgmt.xml) and the admin password
+			 */
+			RealmConfiguration realmConfig = new RealmConfigXMLProcessor().buildRealmConfigurationFromFile();
+            ADMIN_PASSWORD = realmConfig.getAdminPassword(); 
+			
+			/**
+			 * Call to https://<host>:9443/services/ uses HTTPS protocol. Therefore we need to validate the server certificate or CA chain. The server certificate
+			 * is looked up in the trust store.
+			 */
+			String CARBON_HOME = System.getProperty("carbon.home");
+			String TRUST_STORE = CARBON_HOME + "/repository/resources/security/client-truststore.jks";
+
+			System.setProperty("javax.net.ssl.trustStore", TRUST_STORE);
+			System.setProperty("javax.net.ssl.trustStorePassword", TRUST_STORE_PASSWORD);
+			
 			/**
 			 * Create a configuration context. A configuration context contains information for axis2 environment. This is needed to create an axis2 service
 			 * client
@@ -336,8 +370,13 @@ public final class ClientUtils {
 			 * Create an authentication client stub. This will be used to authenticate all calls to WSO2 services
 			 */
 			authenticationStub = new AuthenticationAdminStub(configContext, SERVICES_URL + "AuthenticationAdmin");
-		} catch (Exception e) {
+		} 
+		catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	static {
+		initialize();
 	}
 }
