@@ -13,6 +13,7 @@ import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
 import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.claim.mgt.stub.ClaimManagementServiceStub;
 import org.wso2.carbon.identity.mgt.stub.UserInformationRecoveryServiceStub;
+import org.wso2.carbon.identity.oauth.stub.OAuthAdminServiceStub;
 import org.wso2.carbon.identity.oauth2.stub.OAuth2TokenValidationServiceStub;
 import org.wso2.carbon.registry.ws.stub.WSRegistryServiceStub;
 import org.wso2.carbon.um.ws.api.stub.RemoteUserStoreManagerServiceStub;
@@ -80,6 +81,11 @@ public final class ClientUtils {
 	private static OAuth2TokenValidationServiceStub tokenValidationStub = null;
 
 	/**
+	 * OAuth admin stub
+	 */
+	private static OAuthAdminServiceStub adminService = null;
+
+	/**
 	 * User information recovery stub
 	 */
 	private static UserInformationRecoveryServiceStub userInformationRecoveryStub = null;
@@ -127,6 +133,24 @@ public final class ClientUtils {
 			}
 		}
 		return userStoreStub;
+	}
+
+	/**
+	 * Retrieves a service stub that can be used to call the OAuthAdminService service.
+	 *
+	 * @return A OAuthAdminServiceStub service stub.
+	 */
+	public static OAuthAdminServiceStub getOAuthAdminServiceStub() {
+		if (adminService == null) {
+			final String serviceURL = SERVICES_URL + "OAuthAdminService";
+
+			try {
+				adminService = new OAuthAdminServiceStub(configContext, serviceURL);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return adminService;
 	}
 
 	/**
