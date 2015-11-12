@@ -1,5 +1,7 @@
 package org.vasttrafik.wso2.carbon.identity.api.utils;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Hashtable;
 
 import org.apache.axis2.client.Options;
@@ -53,7 +55,7 @@ public final class ClientUtils {
 	/**
 	 * The API Manager Host
 	 */
-	private static final String HOST_NAME = "localhost";
+	public static String HOST_NAME;
 	
 	/**
 	 * The API Manager Port
@@ -362,15 +364,24 @@ public final class ClientUtils {
 			option.setProperty(HTTPConstants.COOKIE_STRING, authCookie);
 		}
 	}
-	
+
 	private static void initialize() {
 		try {
 			/**
 			 * Get the server configuration (carbon.xml) and the trust store password
 			 */
 			ServerConfiguration config = ServerConfiguration.getInstance();
-            TRUST_STORE_PASSWORD = config.getFirstProperty("Security.TrustStore.Password");
-			
+			TRUST_STORE_PASSWORD = config.getFirstProperty("Security.TrustStore.Password");
+
+			/**
+			 * Use the provided hostname. Fall back to use "localhost" if the hostname cannot be provided.
+			 */
+			try {
+				HOST_NAME = InetAddress.getLocalHost().getHostName();
+			} catch (final UnknownHostException exception) {
+				HOST_NAME = "localhost";
+			}
+
 			/**
 			 * Get the server port offset
 			 */
@@ -382,7 +393,7 @@ public final class ClientUtils {
 			 * Get the user store configuration (user-mgmt.xml) and the admin password
 			 */
 			RealmConfiguration realmConfig = new RealmConfigXMLProcessor().buildRealmConfigurationFromFile();
-            ADMIN_PASSWORD = realmConfig.getAdminPassword(); 
+			ADMIN_PASSWORD = realmConfig.getAdminPassword();
 			
 			/**
 			 * Call to https://<host>:9443/services/ uses HTTPS protocol. Therefore we need to validate the server certificate or CA chain. The server certificate
