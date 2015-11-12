@@ -41,6 +41,12 @@
             <version>4.2.0</version>
             <scope>provided</scope>
         </dependency>
+		<dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.identity.mgt</artifactId>
+            <version>4.2.2</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.identity.mgt.stub</artifactId>
