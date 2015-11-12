@@ -1,3 +1,5 @@
+.idea
+vt-developer-portal-api-utils.iml
 target/
 pom.xml.tag
 pom.xml.releaseBackup
