@@ -33,17 +33,22 @@ public final class ClientUtils {
 	/**
 	 * User Name to access WSO2 Carbon Server
 	 */
-	private static final String ADMIN_USER_NAME = "admin";
+	public static final String ADMIN_USER_NAME = "admin";
 
 	/**
 	 * Password of the User who access the WSO2 Carbon Server
 	 */
-	private static String ADMIN_PASSWORD = "";
-	
+	public static String ADMIN_PASSWORD = "";
+
+	/**
+	 * Trust store path
+	 */
+	public static String TRUST_STORE = "";
+
 	/**
 	 * Password of the trust store
 	 */
-	private static String TRUST_STORE_PASSWORD = "";
+	public static String TRUST_STORE_PASSWORD = "";
 
 	/**
 	 * The API Manager Host
@@ -54,6 +59,11 @@ public final class ClientUtils {
 	 * The API Manager Port
 	 */
 	private static short HOST_PORT = 9443;
+
+	/**
+	 * WSO2 Carbon Server port offset
+	 */
+	public static short PORT_OFFSET;
 
 	/**
 	 * Web services URL
@@ -364,8 +374,8 @@ public final class ClientUtils {
 			/**
 			 * Get the server port offset
 			 */
-			String offset = config.getFirstProperty("Ports.Offset");
-			HOST_PORT += Short.valueOf(offset);
+			PORT_OFFSET = Short.valueOf(config.getFirstProperty("Ports.Offset"));
+			HOST_PORT += PORT_OFFSET;
 			SERVICES_URL = "https://" + HOST_NAME + ":" + HOST_PORT + "/services/";
 			
 			/**
@@ -379,7 +389,7 @@ public final class ClientUtils {
 			 * is looked up in the trust store.
 			 */
 			String CARBON_HOME = System.getProperty("carbon.home");
-			String TRUST_STORE = CARBON_HOME + "/repository/resources/security/client-truststore.jks";
+			TRUST_STORE = CARBON_HOME + "/repository/resources/security/client-truststore.jks";
 
 			System.setProperty("javax.net.ssl.trustStore", TRUST_STORE);
 			System.setProperty("javax.net.ssl.trustStorePassword", TRUST_STORE_PASSWORD);
