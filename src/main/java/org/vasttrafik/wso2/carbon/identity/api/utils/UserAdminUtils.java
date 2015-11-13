@@ -7,6 +7,9 @@ import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationRequestDTO_
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationResponseDTO;
 import org.wso2.carbon.um.ws.api.stub.RemoteUserStoreManagerServiceStub;
 
+import javax.ws.rs.InternalServerErrorException;
+import javax.ws.rs.NotAuthorizedException;
+
 /**
  * @author Lars Andersson
  *
@@ -70,4 +73,22 @@ public class UserAdminUtils {
 		}
 	}
 
+	public static void authenticateCredentials(final String userName, final String credential) {
+		try {
+			ClientUtils.authenticateIfNeeded(userStoreStub._getServiceClient());
+			if (!userStoreStub.authenticate(userName, credential)) {
+				throw new NotAuthorizedException("Unauthorized");
+			}
+		} catch (final Exception exception) {
+			throw new InternalServerErrorException(exception);
+		}
+	}
+	public static int getUserId(final String userName) {
+		try {
+			ClientUtils.authenticateIfNeeded(userStoreStub._getServiceClient());
+			return userStoreStub.getUserId(userName);
+		} catch (final Exception exception) {
+			throw new InternalServerErrorException(exception);
+		}
+	}
 }
