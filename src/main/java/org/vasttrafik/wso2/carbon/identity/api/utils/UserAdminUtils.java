@@ -36,7 +36,7 @@ public class UserAdminUtils {
 
 	public static String validateToken(String authHeader) throws Exception {
 
-		final String[] values = authHeader.split(" ");
+		final String[] values = authHeader == null ? new String[0] : authHeader.split(" ");
 		if (values.length != 2 || !"bearer".equalsIgnoreCase(values[0])) {
 			throw new Exception("Authorization header missing or invalid");
 		}
