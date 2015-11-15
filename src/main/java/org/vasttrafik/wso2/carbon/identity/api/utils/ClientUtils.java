@@ -15,6 +15,7 @@ import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
 import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.claim.mgt.stub.ClaimManagementServiceStub;
 import org.wso2.carbon.identity.mgt.stub.UserInformationRecoveryServiceStub;
+import org.wso2.carbon.identity.mgt.stub.UserIdentityManagementAdminServiceStub;
 import org.wso2.carbon.identity.oauth.stub.OAuthAdminServiceStub;
 import org.wso2.carbon.identity.oauth2.stub.OAuth2TokenValidationServiceStub;
 import org.wso2.carbon.registry.ws.stub.WSRegistryServiceStub;
@@ -101,6 +102,11 @@ public final class ClientUtils {
 	 * User information recovery stub
 	 */
 	private static UserInformationRecoveryServiceStub userInformationRecoveryStub = null;
+	
+	/**
+	 * User identity management stub
+	 */
+	private static UserIdentityManagementAdminServiceStub userIdentityManagementStub = null;
 
 	/**
 	 * Claim management stub
@@ -200,7 +206,25 @@ public final class ClientUtils {
 		}
 		return userInformationRecoveryStub;
 	}
+	
+	/**
+	 * Retrieves a service stub that can be used to call the UserIdentityManagementAdminService service.
+	 *
+	 * @return A UserIdentityManagementAdminServiceStub service stub.
+	 */
+	public static UserIdentityManagementAdminServiceStub getUserIdentityManagementServiceStub() {
+		if (userIdentityManagementStub == null) {
+			final String serviceURL = SERVICES_URL + "UserIdentityManagementAdminService";
 
+			try {
+				userIdentityManagementStub = new UserIdentityManagementAdminServiceStub(configContext, serviceURL);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return userIdentityManagementStub;
+	}
+	
 	/**
 	 * Retrieves a service stub that can be used to call the UserInformationRecoveryService service.
 	 *
