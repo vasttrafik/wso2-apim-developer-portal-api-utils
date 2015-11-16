@@ -53,7 +53,7 @@ public class UserAdminUtils {
 			accessToken.setIdentifier(token);
 			accessToken.setTokenType("bearer");
 			requestDTO.setAccessToken(accessToken);
-			OAuth2TokenValidationRequestDTO_TokenValidationContextParam[] context = new OAuth2TokenValidationRequestDTO_TokenValidationContextParam[0];
+			OAuth2TokenValidationRequestDTO_TokenValidationContextParam[] context = new OAuth2TokenValidationRequestDTO_TokenValidationContextParam[1];
 			OAuth2TokenValidationRequestDTO_TokenValidationContextParam item = new OAuth2TokenValidationRequestDTO_TokenValidationContextParam();
 			context[0] = item;
 			requestDTO.setContext(context);
