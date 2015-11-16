@@ -18,11 +18,10 @@ import org.wso2.carbon.context.PrivilegedCarbonContext;
 
 public final class VTAPIStoreHostObject extends APIStoreHostObject {
 	
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1947045451725374161L;
-	private static final Log LOG = LogFactory.getLog(APIStoreHostObject.class);
+	private static final Log LOG = LogFactory.getLog(VTAPIStoreHostObject.class);
+	private static final String hostObjectName = "VTStore";
 	
 	public VTAPIStoreHostObject() throws APIManagementException {
 		super();
@@ -31,6 +30,11 @@ public final class VTAPIStoreHostObject extends APIStoreHostObject {
 	public VTAPIStoreHostObject(String loggedInUser) throws APIManagementException {
 		super(loggedInUser);
 	}
+	
+	@Override
+    public String getClassName() {
+        return hostObjectName;
+    }
 	
 	public static Scriptable jsConstructor(Context cx, Object[] args, Function Obj,boolean inNewExpr)
 			throws ScriptException, APIManagementException 
@@ -77,7 +81,7 @@ public final class VTAPIStoreHostObject extends APIStoreHostObject {
 	}
 
 	private static APIConsumer getConsumer(Scriptable thisObj) {
-		return ((APIStoreHostObject) thisObj).getApiConsumer();
+		return ((VTAPIStoreHostObject) thisObj).getApiConsumer();
 	}
 	
 	private static NativeObject getPaginatedAPIs(APIConsumer apiConsumer, String loggedInUser, String tenantDomain, int start, int end) {
@@ -176,3 +180,4 @@ public final class VTAPIStoreHostObject extends APIStoreHostObject {
 			return true;
 	}
 }
+
