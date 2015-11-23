@@ -44,7 +44,7 @@ public class ResponseUtils {
 			}
 		}
 		catch (Exception e) {
-			badRequest(resourceBundle, 1000L, new Object[][]{{value},{parameterName}});
+			throw new BadRequestException(badRequest(resourceBundle, 1000L, new Object[][]{{value},{parameterName}}));
 		}
 	}
 	
