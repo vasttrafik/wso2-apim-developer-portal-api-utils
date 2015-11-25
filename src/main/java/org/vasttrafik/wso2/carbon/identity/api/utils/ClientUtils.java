@@ -1,27 +1,27 @@
 package org.vasttrafik.wso2.carbon.identity.api.utils;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.Hashtable;
-
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.axis2.transport.http.HttpTransportProperties;
-
 import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
 import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.claim.mgt.stub.ClaimManagementServiceStub;
-import org.wso2.carbon.identity.mgt.stub.UserInformationRecoveryServiceStub;
 import org.wso2.carbon.identity.mgt.stub.UserIdentityManagementAdminServiceStub;
+import org.wso2.carbon.identity.mgt.stub.UserInformationRecoveryServiceStub;
 import org.wso2.carbon.identity.oauth.stub.OAuthAdminServiceStub;
 import org.wso2.carbon.identity.oauth2.stub.OAuth2TokenValidationServiceStub;
+import org.wso2.carbon.identity.user.profile.stub.UserProfileMgtServiceStub;
 import org.wso2.carbon.registry.ws.stub.WSRegistryServiceStub;
 import org.wso2.carbon.um.ws.api.stub.RemoteUserStoreManagerServiceStub;
-import org.wso2.carbon.user.core.config.RealmConfigXMLProcessor;
 import org.wso2.carbon.user.api.RealmConfiguration;
+import org.wso2.carbon.user.core.config.RealmConfigXMLProcessor;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Hashtable;
 
 /**
  * @author Lars Andersson
@@ -109,6 +109,11 @@ public final class ClientUtils {
 	private static UserIdentityManagementAdminServiceStub userIdentityManagementStub = null;
 
 	/**
+	 * Profile management stub
+	 */
+	private static UserProfileMgtServiceStub profileMgtStub = null;
+
+	/**
 	 * Claim management stub
 	 */
 	private static ClaimManagementServiceStub claimMgmtStub = null;
@@ -190,6 +195,24 @@ public final class ClientUtils {
 	}
 
 	/**
+	 * Retrieves a service stub that can be used to call the UserProfileMgtServiceStub service.
+	 *
+	 * @return A UserProfileMgtServiceStub service stub.
+	 */
+	public static UserProfileMgtServiceStub getProfileManagementServiceStub() {
+		if (profileMgtStub == null) {
+			final String serviceURL = SERVICES_URL + "UserProfileMgtService";
+
+			try {
+				profileMgtStub = new UserProfileMgtServiceStub(configContext, serviceURL);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return profileMgtStub;
+	}
+
+	/**
 	 * Retrieves a service stub that can be used to call the UserInformationRecoveryService service.
 	 *
 	 * @return A UserInformationRecoveryServiceStub service stub.
@@ -247,7 +270,6 @@ public final class ClientUtils {
 	 * Retrieves a service stub that can be used to call the RemoteUserStoreManagerService service.
 	 *
 	 * @return A RemoteUserStoreManagerServiceStub service stub.
-	 * @throws RegistryException
 	 */
 	public static WSRegistryServiceStub getWSRegistryServiceStub() {
 		if (registryStub == null) {
