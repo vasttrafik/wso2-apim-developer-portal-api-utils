@@ -1,4 +1,4 @@
-package org.vasttrafik.wso2.carbon.identity.api.utils;
+package org.vasttrafik.wso2.carbon.common.api.utils;
 
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;

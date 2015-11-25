@@ -1,5 +1,6 @@
 package org.vasttrafik.wso2.carbon.identity.api.utils;
 
+import org.vasttrafik.wso2.carbon.common.api.utils.ClientUtils;
 import org.wso2.carbon.identity.oauth2.stub.OAuth2TokenValidationServiceStub;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationRequestDTO;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationRequestDTO_OAuth2AccessToken;

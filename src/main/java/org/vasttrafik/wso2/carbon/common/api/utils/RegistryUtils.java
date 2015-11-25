@@ -1,6 +1,5 @@
 package org.vasttrafik.wso2.carbon.common.api.utils;
 
-import org.vasttrafik.wso2.carbon.identity.api.utils.ClientUtils;
 import org.wso2.carbon.registry.ws.stub.WSRegistryServiceStub;
 
 import javax.activation.DataHandler;
