@@ -25,8 +25,10 @@ public class ResponseUtils {
 			/**
 			 * Check for missing required parameter value
 			 */
-			if (required && value == null)
+			if (required && value == null) {
+				value = "null";
 				throw new Exception();
+			}
 
 			/**
 			 * Check for valid parameter value
@@ -42,7 +44,7 @@ public class ResponseUtils {
 			}
 		}
 		catch (Exception e) {
-			badRequest(resourceBundle, 1000L, new Object[][]{{value},{parameterName}});
+			throw new BadRequestException(badRequest(resourceBundle, 1000L, new Object[][]{{value},{parameterName}}));
 		}
 	}
 	
@@ -52,12 +54,12 @@ public class ResponseUtils {
 		
 		throw new ClientErrorException(response);
 	}
-	
-	public static void badRequest(String resourceBundle, Long code, Object[][] args) throws BadRequestException {
+
+	public static Response badRequest(String resourceBundle, Long code, Object[][] args) throws BadRequestException {
 		Error error = buildError(resourceBundle, code, args);
 		Response response = Response.status(Response.Status.BAD_REQUEST).entity(error).build();
 
-		throw new BadRequestException(response);
+		return response;
 	}
 	
 	public static String getErrorMessage(String resourceBundle, String error, Object[] args) {
@@ -98,13 +100,13 @@ public class ResponseUtils {
 		error.setMoreInfo(moreInfo);
 		return Response.status(status).entity(error).build();
 	}
-	
+
 	public static Response serverError(Exception e) {
 		Error error = new Error();
 		error.setMessage(e.getMessage());
-		
+
 		Throwable t = e.getCause();
-		
+
 		if (t != null) {
 			OutputStream os = new ByteArrayOutputStream();
 			PrintWriter writer = new PrintWriter(os);
@@ -113,6 +115,39 @@ public class ResponseUtils {
 			error.setMoreInfo(writer.toString());
 		}
 
-		return Response.status(500).entity(error).build();
+		return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error).build();
 	}
+
+	public static Response notAuthorizedError(Exception e) {
+		Error error = new Error();
+		error.setMessage(e.getMessage());
+
+		Throwable t = e.getCause();
+
+		if (t != null) {
+			OutputStream os = new ByteArrayOutputStream();
+			PrintWriter writer = new PrintWriter(os);
+			t.printStackTrace(writer);
+			error.setDescription("Cause:" + t.getMessage());
+			error.setMoreInfo(writer.toString());
+		}
+
+		return Response.status(Response.Status.UNAUTHORIZED).entity(error).build();
+	}
+
+	public static Response serverError(String resourceBundle, Long code, Object[][] args) {
+		final Error error = buildError(resourceBundle, code, args);
+		return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error).build();
+	}
+
+	public static Response notAuthorizedError(String resourceBundle, Long code, Object[][] args) {
+		final Error error = buildError(resourceBundle, code, args);
+		return Response.status(Response.Status.UNAUTHORIZED).entity(error).build();
+	}
+
+	public static Response notFound(String resourceBundle, Long code, Object[][] args) {
+		final Error error = buildError(resourceBundle, code, args);
+		return Response.status(Response.Status.NOT_FOUND).entity(error).build();
+	}
+
 }
