@@ -8,6 +8,6 @@ pom.xml.next
 release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
-java/.settings
-java/.classpath
-java/.project
+.settings
+.classpath
+.project
