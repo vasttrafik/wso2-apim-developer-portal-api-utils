@@ -30,6 +30,6 @@ public class DefaultFormatFilter implements ContainerResponseFilter {
 		// Set CORS Headers
 		responseContext.getHeaders().add("Access-Control-Allow-Origin",  "*");
 		responseContext.getHeaders().add("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
-		responseContext.getHeaders().add("Access-Control-Allow-Headers", "Accept,Authorization,Access-Control-Allow-Origin,Content-Length,Content-Type,If-None-Match,If-Modified-Since");
+		responseContext.getHeaders().add("Access-Control-Allow-Headers", "Accept,X-JWT-Assertion,Access-Control-Allow-Origin,Content-Length,Content-Type,If-None-Match,If-Modified-Since");
 	}
 }
