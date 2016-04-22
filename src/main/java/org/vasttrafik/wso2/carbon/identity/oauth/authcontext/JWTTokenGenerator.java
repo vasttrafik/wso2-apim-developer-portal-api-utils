@@ -349,12 +349,16 @@ public class JWTTokenGenerator {
             return signedJWT;
         } 
 		catch (JOSEException e) {
-            log.error("Error in obtaining tenant's keystore", e);
-            throw new IdentityException("Error in obtaining tenant's keystore", e);
+			final String errorMsg = "Error in obtaining tenant's keystore";
+            log.error(errorMsg, e);
+			IdentityException ex = IdentityException.error(errorMsg, e);
+            throw ex;
         } 
 		catch (Exception e) {
-            log.error("Error in obtaining tenant's keystore", e);
-            throw new IdentityException("Error in obtaining tenant's keystore", e);
+			final String errorMsg = "Error in obtaining tenant's keystore";
+            log.error(errorMsg, e);
+			IdentityException ex = IdentityException.error(errorMsg, e);
+            throw ex;
         }
     }
 
@@ -391,8 +395,10 @@ public class JWTTokenGenerator {
             // need to be done
         }
         
-        log.error("UnSupported Signature Algorithm");
-        throw new IdentityException("UnSupported Signature Algorithm");
+		final String errorMsg = "UnSupported Signature Algorithm";
+        log.error(errorMsg);
+		IdentityException ex = IdentityException.error(errorMsg);
+        throw ex;
     }
 
     /**
@@ -439,8 +445,10 @@ public class JWTTokenGenerator {
             return new JWSAlgorithm(JWSAlgorithm.NONE.getName());
         }
         
-        log.error("Unsupported Signature Algorithm in identity.xml");
-        throw new IdentityException("Unsupported Signature Algorithm in identity.xml");
+		final String errorMsg = "Unsupported Signature Algorithm in identity.xml";
+        log.error(errorMsg);
+		IdentityException ex = IdentityException.error(errorMsg);
+        throw ex;
     }
 
     /**
@@ -502,7 +510,8 @@ public class JWTTokenGenerator {
         } 
 		catch (Exception e) {
             final String error = "Error in obtaining certificate for tenant " + tenantDomain;
-            throw new IdentityException(error, e);
+			IdentityException ex = IdentityException.error(error, e);
+            throw ex;
         }
     }
     
@@ -538,7 +547,8 @@ public class JWTTokenGenerator {
             		.getKey(keyAlias, password);
             }
             catch (Exception e) {
-            	throw new IdentityException(e.getMessage());
+				IdentityException ex = IdentityException.error(e.getMessage());
+            	throw ex;
             }
             
             if (privateKey != null) {

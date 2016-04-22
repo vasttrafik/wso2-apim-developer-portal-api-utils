@@ -5,11 +5,19 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.vasttrafik.se.common</groupId>
     <artifactId>vt-developer-portal-api-utils</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <name>Västtrafik Developer Portal API Utils</name>
     <description>Västtrafik Developer Portal API Maven Project</description>
     <packaging>jar</packaging>
-
+	
+    <properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<carbon.version>4.4.3</carbon.version>
+		<apimgt.version>5.0.3</apimgt.version>
+		<identity.version>5.0.7</identity.version>
+	</properties>
+	
     <dependencies>
 	     <dependency>
             <groupId>org.wso2.orbit.com.nimbusds</groupId>
@@ -24,19 +32,18 @@
 		<dependency>
             <groupId>org.wso2.carbon.identity</groupId>
             <artifactId>org.wso2.carbon.identity.base</artifactId>
-			<version>4.5.0</version>
+			<version>${identity.version}</version>
         </dependency>
 		<dependency>
             <groupId>org.wso2.carbon.identity</groupId>
             <artifactId>org.wso2.carbon.identity.oauth</artifactId>
-			<version>4.5.0</version>
+			<version>${identity.version}</version>
         </dependency>
 		<dependency>
             <groupId>org.wso2.carbon.identity</groupId>
             <artifactId>org.wso2.carbon.identity.oauth.common</artifactId>
-			<version>4.5.0</version>
+			<version>${identity.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-servlet</artifactId>
@@ -52,109 +59,109 @@
         <dependency>
             <groupId>org.apache.axis2.wso2</groupId>
             <artifactId>axis2</artifactId>
-            <version>1.6.1.wso2v4</version>
+			<version>1.6.1.wso2v16</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.authenticator.stub</artifactId>
-            <version>4.2.0</version>
+			<version>${carbon.version}</version>
             <scope>provided</scope>
         </dependency>
 		<dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.identity</groupId>
             <artifactId>org.wso2.carbon.claim.mgt.stub</artifactId>
-            <version>4.2.0</version>
+            <version>${identity.version}</version>
             <scope>provided</scope>
         </dependency>
 		<dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.apimgt</groupId>
             <artifactId>org.wso2.carbon.apimgt.api</artifactId>
-            <version>1.2.3</version>
+            <version>${apimgt.version}</version>
             <scope>provided</scope>
         </dependency>
 		<dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.apimgt</groupId>
             <artifactId>org.wso2.carbon.apimgt.impl</artifactId>
-            <version>1.2.3</version>
+            <version>${apimgt.version}</version>
             <scope>provided</scope>
         </dependency>
 		<dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.identity</groupId>
             <artifactId>org.wso2.carbon.identity.mgt</artifactId>
-            <version>4.2.2</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.identity.mgt.stub</artifactId>
-            <version>4.2.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.identity.oauth.stub</artifactId>
-            <version>4.2.3</version>
+            <version>${identity.version}</version>
             <scope>provided</scope>
         </dependency>
 		<dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.identity</groupId>
+            <artifactId>org.wso2.carbon.identity.mgt.stub</artifactId>
+            <version>${identity.version}</version>
+            <scope>provided</scope>
+        </dependency>
+		<dependency>
+            <groupId>org.wso2.carbon.identity</groupId>
+            <artifactId>org.wso2.carbon.identity.oauth.stub</artifactId>
+            <version>${identity.version}</version>
+            <scope>provided</scope>
+        </dependency>
+		<dependency>
+            <groupId>org.wso2.carbon.identity</groupId>
             <artifactId>org.wso2.carbon.identity.user.profile.stub</artifactId>
-            <version>4.2.0</version>
+            <version>${identity.version}</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
+ 		<dependency>
+            <groupId>org.wso2.carbon.registry</groupId>
             <artifactId>org.wso2.carbon.registry.ws.stub</artifactId>
-            <version>4.2.0</version>
+            <version>4.4.8</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
+		<dependency>
+            <groupId>org.wso2.carbon.identity</groupId>
             <artifactId>org.wso2.carbon.um.ws.api.stub</artifactId>
-            <version>4.2.1</version>
+            <version>${identity.version}</version>
             <scope>provided</scope>
         </dependency>
 		<dependency>
 			<groupId>org.wso2.carbon</groupId>
 			<artifactId>org.wso2.carbon.user.api</artifactId>
-			<version>4.2.0</version>
+			<version>${carbon.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.wso2.carbon</groupId>
 			<artifactId>org.wso2.carbon.user.core</artifactId>
-			<version>4.2.0</version>
+			<version>${carbon.version}</version>
 			<scope>provided</scope>
-			</dependency>
+		</dependency>
 		<dependency>
 			<groupId>org.wso2.carbon</groupId>
 			<artifactId>org.wso2.carbon.base</artifactId>
-			<version>4.2.0</version>
+			<version>${carbon.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.wso2.carbon</groupId>
 			<artifactId>org.wso2.carbon.core</artifactId>
-			<version>4.2.0</version>
+			<version>${carbon.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.wso2.carbon</groupId>
 			<artifactId>org.wso2.carbon.logging</artifactId>
-			<version>4.2.0</version>
+			<version>${carbon.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.wso2.carbon</groupId>
 			<artifactId>org.wso2.carbon.utils</artifactId>
-			<version>4.2.0</version>
+			<version>${carbon.version}</version>
 			<scope>provided</scope>
 		</dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
+		<dependency>
+            <groupId>org.wso2.carbon.identity</groupId>
             <artifactId>org.wso2.carbon.identity.user.profile.stub</artifactId>
-            <version>4.2.0</version>
+            <version>${identity.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

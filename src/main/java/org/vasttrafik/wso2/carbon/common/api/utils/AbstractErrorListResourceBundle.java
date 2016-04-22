@@ -13,7 +13,7 @@ import sun.util.ResourceBundleEnumeration;
 
 /**
  * 
- * @author Lars Andersson, Västtrafik 2015
+ * @author Lars Andersson
  *
  */
 public abstract class AbstractErrorListResourceBundle extends ResourceBundle {
