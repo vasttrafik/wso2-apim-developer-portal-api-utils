@@ -5,9 +5,12 @@ package org.vasttrafik.wso2.carbon.common.api.beans;
  */
 public class AccessToken {
 
-    private String token;
-    private String refreshToken;
-    private Long expires;
+    @SuppressWarnings("unused")
+	private String token;
+    @SuppressWarnings("unused")
+	private String refreshToken;
+    @SuppressWarnings("unused")
+	private Long expires;
     
     public static AccessToken valueOf(final String token, final String refreshToken, final Long expires) {
         final AccessToken accessToken = new AccessToken();

@@ -14,13 +14,11 @@ import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.MessageContext;
-import org.apache.axis2.transport.base.BaseConstants;
 import org.apache.axis2.transport.mail.MailConstants;
 
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.core.CarbonConfigurationContextFactory;
 import org.wso2.carbon.identity.mgt.mail.DefaultEmailSendingModule;
-import org.wso2.carbon.identity.mgt.mail.EmailConfig;
 import org.wso2.carbon.identity.mgt.mail.Notification;
 
 public class EmailSendingModule extends DefaultEmailSendingModule {

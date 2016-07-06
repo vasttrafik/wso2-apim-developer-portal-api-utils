@@ -16,6 +16,7 @@ import sun.util.ResourceBundleEnumeration;
  * @author Lars Andersson
  *
  */
+@SuppressWarnings("restriction")
 public abstract class AbstractErrorListResourceBundle extends ResourceBundle {
 	
 	private Map<String,Object[]> lookup = null;

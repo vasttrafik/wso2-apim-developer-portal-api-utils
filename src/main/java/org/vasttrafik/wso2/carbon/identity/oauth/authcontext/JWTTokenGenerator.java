@@ -274,7 +274,8 @@ public class JWTTokenGenerator {
             }
 
             if(claimValues != null) {
-                Iterator<String> it = new TreeSet(claimValues.keySet()).iterator();
+                @SuppressWarnings({ "unchecked", "rawtypes" })
+				Iterator<String> it = new TreeSet(claimValues.keySet()).iterator();
                 
 				while (it.hasNext()) {
                     String claimURI = it.next();
@@ -351,12 +352,14 @@ public class JWTTokenGenerator {
 		catch (JOSEException e) {
 			final String errorMsg = "Error in obtaining tenant's keystore";
             log.error(errorMsg, e);
+			@SuppressWarnings("deprecation")
 			IdentityException ex = IdentityException.error(errorMsg, e);
             throw ex;
         } 
 		catch (Exception e) {
 			final String errorMsg = "Error in obtaining tenant's keystore";
             log.error(errorMsg, e);
+			@SuppressWarnings("deprecation")
 			IdentityException ex = IdentityException.error(errorMsg, e);
             throw ex;
         }
@@ -397,6 +400,7 @@ public class JWTTokenGenerator {
         
 		final String errorMsg = "UnSupported Signature Algorithm";
         log.error(errorMsg);
+		@SuppressWarnings("deprecation")
 		IdentityException ex = IdentityException.error(errorMsg);
         throw ex;
     }
@@ -447,6 +451,7 @@ public class JWTTokenGenerator {
         
 		final String errorMsg = "Unsupported Signature Algorithm in identity.xml";
         log.error(errorMsg);
+		@SuppressWarnings("deprecation")
 		IdentityException ex = IdentityException.error(errorMsg);
         throw ex;
     }
@@ -510,6 +515,7 @@ public class JWTTokenGenerator {
         } 
 		catch (Exception e) {
             final String error = "Error in obtaining certificate for tenant " + tenantDomain;
+			@SuppressWarnings("deprecation")
 			IdentityException ex = IdentityException.error(error, e);
             throw ex;
         }
@@ -547,6 +553,7 @@ public class JWTTokenGenerator {
             		.getKey(keyAlias, password);
             }
             catch (Exception e) {
+				@SuppressWarnings("deprecation")
 				IdentityException ex = IdentityException.error(e.getMessage());
             	throw ex;
             }

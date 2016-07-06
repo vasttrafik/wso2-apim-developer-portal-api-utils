@@ -4,7 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.sql.SQLException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 

@@ -44,6 +44,7 @@ public final class JWTTokenValidator {
 	}
 	
 	public boolean isValid() {
+		@SuppressWarnings("deprecation")
 		JSONParser parser = new JSONParser();
 		
 		String[] jwtTokenValues = jwtToken.split("\\.");

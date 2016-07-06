@@ -9,7 +9,6 @@ import javax.ws.rs.NotAuthorizedException;
 import org.vasttrafik.wso2.carbon.common.api.beans.AuthenticatedUser;
 import org.vasttrafik.wso2.carbon.common.api.beans.Error;
 import org.vasttrafik.wso2.carbon.common.api.utils.ResponseUtils;
-import org.vasttrafik.wso2.carbon.identity.oauth.authcontext.JWTClaims;
 import org.vasttrafik.wso2.carbon.identity.oauth.authcontext.JWTToken;
 import org.vasttrafik.wso2.carbon.identity.oauth.authcontext.JWTTokenValidator;
 
