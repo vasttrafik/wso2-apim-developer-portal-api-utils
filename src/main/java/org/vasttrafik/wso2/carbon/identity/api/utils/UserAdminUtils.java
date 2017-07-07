@@ -1,6 +1,7 @@
 package org.vasttrafik.wso2.carbon.identity.api.utils;
 
 import org.vasttrafik.wso2.carbon.common.api.utils.ClientUtils;
+import org.wso2.carbon.um.ws.api.stub.ClaimDTO;
 import org.wso2.carbon.identity.oauth2.stub.OAuth2TokenValidationServiceStub;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationRequestDTO;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationRequestDTO_OAuth2AccessToken;
@@ -89,6 +90,22 @@ public class UserAdminUtils {
 			ClientUtils.authenticateIfNeeded(userStoreStub._getServiceClient());
 			return userStoreStub.getUserId(userName);
 		} catch (final Exception exception) {
+			throw new InternalServerErrorException(exception);
+		}
+	}
+	public static String getUserClaimValue(final String userName, final String claimUri, final String profileName) {
+		try {
+			ClientUtils.authenticateIfNeeded(userStoreStub._getServiceClient());
+			
+			for(ClaimDTO claimDTO : userStoreStub.getUserClaimValues(userName, profileName)) {
+				if(claimDTO.getClaimUri().equals(claimUri)) {
+					return claimDTO.getValue();
+				}
+			}
+			return null;
+
+		} catch (final Exception exception) {
+			exception.printStackTrace();
 			throw new InternalServerErrorException(exception);
 		}
 	}
