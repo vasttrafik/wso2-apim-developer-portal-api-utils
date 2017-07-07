@@ -11,6 +11,7 @@ public class AuthenticatedUser {
     private String userName;
     private String[] roles;
     private AccessToken accessToken;
+    private boolean enabledTotp = false;
     
     public AuthenticatedUser() {	
     }
@@ -59,7 +60,15 @@ public class AuthenticatedUser {
 		this.accessToken = accessToken;
 	}
     
-    public boolean hasRole(String role) {
+    public boolean isEnabledTotp() {
+		return enabledTotp;
+	}
+
+	public void setEnabledTotp(boolean enabledTotp) {
+		this.enabledTotp = enabledTotp;
+	}
+
+	public boolean hasRole(String role) {
     	if (roles != null) {
     		for (String s : roles)
     			if (s.equalsIgnoreCase(role))
